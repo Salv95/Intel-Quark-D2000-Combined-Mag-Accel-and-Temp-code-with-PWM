@@ -1,0 +1,1 @@
+This folder contains the main.cpp file for the Magnetometer Sensor with PWM
