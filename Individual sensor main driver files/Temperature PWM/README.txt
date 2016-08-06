@@ -1,0 +1,3 @@
+This folder contains the main.cpp file for the Temperature Sensor with PWM.
+
+There is no template in ISSM for the temperaute sensor. This code displays the data received by the temperature sensor in celcius. The code provides pause with modulation(PWM) for the LED. The closer a temperature value is to zero, the faster the modulation will be. This also means that the modulation will be slower the further the temperature value is from zero.
