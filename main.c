@@ -44,226 +44,107 @@
 #define LED_BIT 24
 #define MAX_LED_BLINKS (1);
 static qm_gpio_port_config_t cfg;
-static void accel_blinky(double x);
 
-static const char *degrees_to_direction(unsigned int deg)/* function prints direction based on the degree inputed*/
+static void LED_PWM(int delay)
 {
+	qm_gpio_set_pin(QM_GPIO_0, LED_BIT);/*turn LED on*/
+	clk_sys_udelay(delay);
 
-	qm_gpio_set_pin(QM_GPIO_0, LED_BIT);/* turns LED ON*/
-	clk_sys_udelay(1000000);/* ON LED delay*/
+	qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);/*turn LED off*/
+	clk_sys_udelay(delay);
 
-	qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);/* turns LED OFF*/
-	clk_sys_udelay(1000000);/* OFF LED delay*/
+}
+static const char *degrees_to_direction(unsigned int deg)
+{
+	cfg.direction = BIT(LED_BIT);
+	qm_gpio_set_config(QM_GPIO_0, &cfg);
+
 	if (deg >= 360) {
 		deg %= 360;
 	}
-
 	if (deg >= 338 || deg < 23) {
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(100);
 
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(100);
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(100);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(100);
+		LED_PWM(100);
+		LED_PWM(100);
 		return "N";
-	} else if (deg < 68) {
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(1000);
 
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(1000);
+	}else if (deg < 68) {
 
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(1000);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(1000);
+		LED_PWM(1000);
+		LED_PWM(1000);
 		return "NE";
-	} else if (deg < 113) {
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(2500);
+	}else if (deg < 113) {
 
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(2500);
-
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(2500);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(2500);
+		LED_PWM(2500);
+		LED_PWM(2500);
 		return "E";
-	} else if (deg < 158) {
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(4500);
 
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(4500);
+	}else if (deg < 158) {
 
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(4500);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(4500);
+		LED_PWM(4500);
+		LED_PWM(4500);
 		return "SE";
-	} else if (deg < 203) {
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(6500);
 
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(6500);
+	}else if (deg < 203) {
 
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(6500);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(6500);
+		LED_PWM(6500);
+		LED_PWM(6500);
 		return "S";
-	} else if (deg < 248) {
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(8500);
 
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(8500);
+	}else if (deg < 248) {
 
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(8500);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(8500);
+		LED_PWM(8500);
+		LED_PWM(8500);
 		return "SW";
-	} else if (deg < 293) {
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(10500);
 
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(10500);
+	}else if (deg < 293) {
 
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(10500);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(10500);
+		LED_PWM(10500);
+		LED_PWM(10500);
 		return "W";
-	} else {
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(12500);
 
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(12500);
-
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(12500);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(12500);
+	}else{
+		LED_PWM(12500);
+		LED_PWM(12500);
 		return "NW";
-	}
+		}
 }
 static void temperature_blink(double temp)
 {
-	qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-	clk_sys_udelay(1000000);
-
-	qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-	clk_sys_udelay(1000000);
-	qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-	clk_sys_udelay(1000000);
-
-	qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-	clk_sys_udelay(1000000);
-
 	QM_PUTS("\n");
 	cfg.direction = BIT(LED_BIT);
 	qm_gpio_set_config(QM_GPIO_0, &cfg);
 
 	if(temp < 0)
 	{
-
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(-1 * temp * 10000);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(-1 * temp * 10000);
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(-1 * temp * 10000);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(-1 * temp * 10000);
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(-1 * temp * 10000);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(-1 * temp * 10000);
-
-
+		LED_PWM(-1 * temp * 105000);/*makes the modulation value positive if the temperature is negative*/
+		LED_PWM(-1 * temp * 105000);
 	}
 	else{
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(temp * 1000);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(temp * 1000);
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(temp * 1000);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(temp * 1000);
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(temp * 1000);
-
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(temp * 1000);
+		LED_PWM(temp * 1000);
+		LED_PWM(temp * 1000);
 	}
-
 }
 static void accel_blinky(double x)
 {
+	cfg.direction = BIT(LED_BIT);
+	qm_gpio_set_config(QM_GPIO_0, &cfg);
 
 	if((x > 0 && x <= 5) || (x < 0 && x >= -5))
 	{
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(1000);
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(1000);
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-				clk_sys_udelay(1000);
-				qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-				clk_sys_udelay(1000);
-				qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-						clk_sys_udelay(1000);
-						qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-						clk_sys_udelay(1000);
+		LED_PWM(1000);
+		LED_PWM(1000);
 	}
 	if((x > 5 && x <= 10) || (x < -5 && x >= -10))
 	{
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(70000);
-		qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-		clk_sys_udelay(70000);
-		qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-				clk_sys_udelay(70000);
-				qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-				clk_sys_udelay(70000);
-				qm_gpio_set_pin(QM_GPIO_0, LED_BIT);
-						clk_sys_udelay(70000);
-						qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);
-						clk_sys_udelay(70000);
+		LED_PWM(70000);
+		LED_PWM(70000);
 	}
-
 
 }
 static void print_all_sensor_callback(void)
 {
-
-	qm_gpio_set_pin(QM_GPIO_0, LED_BIT);/* turns on LED*/
-	clk_sys_udelay(1000000);/*LED on delay*/    /*unit are in clock cycles*/
-
-	qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);/* turns off LED*/
-	clk_sys_udelay(1000000);/*LED off delay*/
+	LED_PWM(1000000);
 
 	bmc150_temp_t temp = {0};/* temperature object created*/
 	bmc150_read_temp(&temp);/*function initializes the values in the temp object*/
@@ -272,12 +153,7 @@ static void print_all_sensor_callback(void)
 	QM_PRINTF("\n\n");
 
 
-
-	qm_gpio_set_pin(QM_GPIO_0, LED_BIT);/* turns on LED*/
-	clk_sys_udelay(1000000);/*LED on delay*/
-
-	qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);/* turns off LED*/
-	clk_sys_udelay(1000000);/*LED off delay*/
+	LED_PWM(1000000);
 
 	bmc150_accel_t accel = {0};/* accelerometer object created*/
 	bmc150_read_accel(&accel);/* accelerometer object initialized*/
@@ -287,11 +163,7 @@ static void print_all_sensor_callback(void)
 	QM_PRINTF("\n\n");
 
 
-	qm_gpio_set_pin(QM_GPIO_0, LED_BIT);/* turns on LED*/
-	clk_sys_udelay(1000000);/*LED on delay*/
-
-	qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);/* turns off LED*/
-	clk_sys_udelay(1000000);/*LED off delay*/
+	LED_PWM(1000000);
 
 	bmc150_mag_t mag = {0};
 	double heading;
@@ -311,7 +183,6 @@ static void print_all_sensor_callback(void)
 		  mag.z, deg, degrees_to_direction(deg));
 	QM_PRINTF("\n\n");
 
-  clk_sys_udelay(1000000);
 
 	qm_rtc_set_alarm(QM_RTC_0, (QM_RTC[QM_RTC_0].rtc_ccvr + ALARM));
 }
