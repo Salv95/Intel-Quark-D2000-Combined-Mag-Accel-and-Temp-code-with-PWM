@@ -55,26 +55,20 @@ static void LED_PWM(int delay)
 
 	qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);/*turn LED off*/
 	clk_sys_udelay(delay);
-
-	qm_gpio_set_pin(QM_GPIO_0, LED_BIT);/*turn LED on*/
-	clk_sys_udelay(delay);
-
-	qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);/*turn LED off*/
-	clk_sys_udelay(delay);
-
 }
 
 static void temperature_blink(double temp)
 {
-	QM_PUTS("\n");
 	cfg.direction = BIT(LED_BIT);
 	qm_gpio_set_config(QM_GPIO_0, &cfg);
 
 	if(temp < 0)
 	{
 		LED_PWM(-1 * temp * 105000);/*makes the modulation value positive if the temperature is negative*/
+		LED_PWM(-1 * temp * 105000);
 	}
 	else{
+		LED_PWM(temp * 1000);
 		LED_PWM(temp * 1000);
 	}
 }
