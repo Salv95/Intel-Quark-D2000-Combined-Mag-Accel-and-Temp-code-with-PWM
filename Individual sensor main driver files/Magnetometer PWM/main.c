@@ -54,13 +54,6 @@ static void LED_PWM(int delay)
 
 	qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);/*turn LED off*/
 	clk_sys_udelay(delay);
-
-	qm_gpio_set_pin(QM_GPIO_0, LED_BIT);/*turn LED on*/
-	clk_sys_udelay(delay);
-
-	qm_gpio_clear_pin(QM_GPIO_0, LED_BIT);/*turn LED off*/
-	clk_sys_udelay(delay);
-
 }
 static const char *degrees_to_direction(unsigned int deg)
 {
@@ -73,38 +66,46 @@ static const char *degrees_to_direction(unsigned int deg)
 	if (deg >= 338 || deg < 23) {
 
 		LED_PWM(100);
+		LED_PWM(100);
 		return "N";
 
 	}else if (deg < 68) {
 
 		LED_PWM(1000);
+		LED_PWM(1000);
 		return "NE";
 	}else if (deg < 113) {
 
+		LED_PWM(2500);
 		LED_PWM(2500);
 		return "E";
 
 	}else if (deg < 158) {
 
 		LED_PWM(4500);
+		LED_PWM(4500);
 		return "SE";
 
 	}else if (deg < 203) {
 
+		LED_PWM(6500);
 		LED_PWM(6500);
 		return "S";
 
 	}else if (deg < 248) {
 
 		LED_PWM(8500);
+		LED_PWM(8500);
 		return "SW";
 
 	}else if (deg < 293) {
 
 		LED_PWM(10500);
+		LED_PWM(10500);
 		return "W";
 
 	}else{
+		LED_PWM(12500);
 		LED_PWM(12500);
 		return "NW";
 		}
